@@ -1,24 +1,24 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { ViewerComponent, Viewer, WebIFCLoaderPlugin } from '@behagoras/felipelib';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <ViewerComponent
+        config={{ canvasId: "myCanvas", transparent: false }}
+        onViewerLoaded={(viewer: Viewer) => {
+          viewer.camera.eye = [-3.933, 2.855, 27.018];
+          viewer.camera.look = [4.400, 3.724, 8.899];
+          viewer.camera.up = [-0.018, 0.999, 0.039];
+          const webIFCLoader = new WebIFCLoaderPlugin(viewer, {
+            // Path to web-ifc.wasm, which does the IFC parsing for us
+            wasmPath: "https://cdn.jsdelivr.net/npm/@xeokit/xeokit-sdk/dist/"
+          });
+          webIFCLoader.load({
+            src: "https://3dves-shared-files.s3.us-west-2.amazonaws.com/products/bimep/Duplex_A_20110505_IssuesAlternate.ifc",
+            edges: true
+          });
+        }}
+      />
     </div>
   );
 }
